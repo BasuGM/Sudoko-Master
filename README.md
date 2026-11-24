@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sudoku Master
 
-## Getting Started
+A client-side Sudoku game. The board is the product: warm paper, one accent, and hints that explain the logic instead of handing over the answer.
 
-First, run the development server:
+## Play
+
+- Four difficulties, rated by the hardest technique a human-style solver needs. Easy stays with singles. Medium uses pairs, pointing, and box/line reduction. Hard uses triples or an X-Wing. Expert uses a swordfish, an XY-Wing, or a longer chain of hard steps.
+- Every generated puzzle has one solution, and the logical solver can finish it.
+- Keyboard, number pad, notes, undo, redo, pause, check, and a daily puzzle seeded by the UTC date.
+- Progress, streaks, and achievements stay in `localStorage`.
+
+## Scripts
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm test
+npm run typecheck
+npm run lint
+npm run test:e2e
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Playwright needs a browser once: `npx playwright install chromium`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Layout
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `src/engine` is pure TypeScript. It does not import React. Grids are 81-cell arrays. Candidates are 9-bit masks.
+- `src/store` holds the game, the timer, settings, and statistics in Zustand. The timer is not read by the board, so a ticking clock does not repaint 81 cells.
+- `src/app` is the Next.js App Router. The game, daily, learn, progress, and settings screens are client views inside a shared shell.
 
-## Learn More
+## Generation
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Puzzles are carved from a filled grid with a seeded mulberry32 generator. A removal is kept only while the logical solver still reaches the original solution. The daily seed is `sudoku-master-daily-v1:YYYY-MM-DD`.

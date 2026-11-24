@@ -1,26 +1,228 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #f4f1ea;
+  --ink: #1c1917;
+  --muted: #6f675e;
+  --line: #e3dcd1;
+  --accent: #0f6e6b;
+  --accent-soft: rgba(15, 110, 107, 0.14);
+  --board-max: 520px;
+  --board-paper: #f7f3ea;
+  --board-strong: #1c1917;
+  --board-line: #ddd4c6;
+  --board-given: #1c1917;
+  --board-entry: #0f6e6b;
+  --board-note: #6b645c;
+  --board-peer: rgba(28, 25, 23, 0.05);
+  --board-same: rgba(15, 110, 107, 0.14);
+  --board-selected: #0f6e6b;
+  --board-conflict: #f3d6d2;
+  --board-conflict-ink: #8f3d36;
+  --background: var(--paper);
+  --foreground: var(--ink);
+  color-scheme: light;
 }
+
+[data-theme="dark"] {
+  --paper: #1a1816;
+  --ink: #f3efe7;
+  --muted: #b7aea3;
+  --line: #3a342c;
+  --background: var(--paper);
+  --foreground: var(--ink);
+  color-scheme: dark;
+}
+
+[data-accent="teal"] {
+  --accent: #0f6e6b;
+  --accent-soft: rgba(15, 110, 107, 0.14);
+  --board-entry: #0f6e6b;
+  --board-same: rgba(15, 110, 107, 0.16);
+  --board-selected: #0f6e6b;
+}
+
+[data-accent="indigo"] {
+  --accent: #343f8a;
+  --accent-soft: rgba(52, 63, 138, 0.14);
+  --board-entry: #343f8a;
+  --board-same: rgba(52, 63, 138, 0.14);
+  --board-selected: #343f8a;
+}
+
+[data-accent="copper"] {
+  --accent: #8c4a32;
+  --accent-soft: rgba(140, 74, 50, 0.14);
+  --board-entry: #8c4a32;
+  --board-same: rgba(140, 74, 50, 0.14);
+  --board-selected: #8c4a32;
+}
+
+[data-theme="dark"][data-accent="teal"] {
+  --accent: #8fd4d0;
+  --accent-soft: rgba(143, 212, 208, 0.16);
+}
+
+[data-theme="dark"][data-accent="indigo"] {
+  --accent: #b7c0f5;
+  --accent-soft: rgba(183, 192, 245, 0.16);
+}
+
+[data-theme="dark"][data-accent="copper"] {
+  --accent: #e2b09a;
+  --accent-soft: rgba(226, 176, 154, 0.16);
+}
+
+[data-board="night"] {
+  --board-paper: #161411;
+  --board-strong: #f3efe7;
+  --board-line: #3c352d;
+  --board-given: #f3efe7;
+  --board-note: #c0b6aa;
+  --board-peer: rgba(243, 239, 231, 0.06);
+  --board-conflict: #4a2e2c;
+  --board-conflict-ink: #f0b2ab;
+}
+
+[data-board="night"][data-accent="teal"] {
+  --board-entry: #8fd4d0;
+  --board-selected: #8fd4d0;
+  --board-same: rgba(143, 212, 208, 0.2);
+}
+
+[data-board="night"][data-accent="indigo"] {
+  --board-entry: #c5cdf8;
+  --board-selected: #c5cdf8;
+  --board-same: rgba(197, 205, 248, 0.2);
+}
+
+[data-board="night"][data-accent="copper"] {
+  --board-entry: #f0c2ae;
+  --board-selected: #f0c2ae;
+  --board-same: rgba(240, 194, 174, 0.2);
+}
+
+[data-board="graphite"] {
+  --board-paper: #e6e5e2;
+  --board-strong: #1f2124;
+  --board-line: #c9c7c2;
+  --board-given: #1f2124;
+  --board-note: #5c5f64;
+  --board-peer: rgba(31, 33, 36, 0.05);
+  --board-conflict: #f0d4d0;
+  --board-conflict-ink: #8a3b36;
+}
+
+[data-board-size="small"] { --board-max: 420px; }
+[data-board-size="medium"] { --board-max: 520px; }
+[data-board-size="large"] { --board-max: 640px; }
 
 @theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-geist-sans), sans-serif;
+  --font-display: var(--font-display), serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+.sudoku-board {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  width: min(100%, var(--board-max));
+  aspect-ratio: 1;
+  background: var(--board-paper);
+  border: 2px solid var(--board-strong);
+  user-select: none;
+}
+
+.sudoku-cell {
+  container-type: size;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--board-line);
+  border-bottom: 1px solid var(--board-line);
+  background: transparent;
+  color: var(--board-entry);
+  font-family: var(--font-sans);
+  font-size: clamp(1.05rem, 4.6vw, 1.75rem);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.sudoku-cell:nth-child(9n) { border-right: 0; }
+.sudoku-cell:nth-child(n + 73) { border-bottom: 0; }
+.sudoku-cell:nth-child(3n):not(:nth-child(9n)) {
+  border-right-width: 2px;
+  border-right-color: var(--board-strong);
+}
+.sudoku-cell:nth-child(n + 19):nth-child(-n + 27),
+.sudoku-cell:nth-child(n + 46):nth-child(-n + 54) {
+  border-bottom-width: 2px;
+  border-bottom-color: var(--board-strong);
+}
+
+.sudoku-cell.given { color: var(--board-given); font-weight: 600; }
+.sudoku-cell.peer { background: var(--board-peer); }
+.sudoku-cell.same { background: var(--board-same); }
+.sudoku-cell.conflict {
+  background: var(--board-conflict);
+  color: var(--board-conflict-ink);
+}
+.sudoku-cell.selected { box-shadow: inset 0 0 0 2px var(--board-selected); }
+.sudoku-cell.emphasis { box-shadow: inset 0 0 0 2px var(--board-selected); }
+.sudoku-cell:focus-visible { outline: none; }
+
+.candidate-notes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  width: 100%;
+  height: 100%;
+  padding: 7%;
+  color: var(--board-note);
+  font-size: clamp(8px, 22cqmin, 11px);
+  font-weight: 500;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.candidate-notes span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes settle {
+  from { transform: scale(0.92); opacity: 0.4; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.value-enter { animation: settle 140ms ease-out; }
+
+[data-motion="off"] .value-enter { animation: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .value-enter { animation: none; }
 }
