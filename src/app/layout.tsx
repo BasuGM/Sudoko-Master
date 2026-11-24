@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { Suspense, type ReactNode } from "react";
 import type { Metadata } from "next";
 import { Fraunces, Geist } from "next/font/google";
 import { AppProvider } from "@/components/layout/AppProvider";
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   description: "A quiet Sudoku game with logical hints, a daily puzzle, and a record of your play.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={`${geist.variable} ${fraunces.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="flex min-h-full flex-col">
