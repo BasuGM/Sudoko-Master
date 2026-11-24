@@ -1,7 +1,11 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { LessonView } from "@/components/learning/LearnViews";
-import { lessonById } from "@/content/lessons";
+import { LESSONS, lessonById } from "@/content/lessons";
+
+export function generateStaticParams() {
+  return LESSONS.map((lesson) => ({ technique: lesson.id }));
+}
 
 export async function generateMetadata({
   params,
