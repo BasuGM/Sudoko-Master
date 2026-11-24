@@ -244,9 +244,12 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   moveSelection: (rowStep, columnStep) => {
     const current = get().selected;
-    const start = current ?? 0;
-    const row = Math.min(8, Math.max(0, Math.floor(start / 9) + rowStep));
-    const column = Math.min(8, Math.max(0, (start % 9) + columnStep));
+    if (current == null) {
+      set({ selected: 0 });
+      return;
+    }
+    const row = Math.min(8, Math.max(0, Math.floor(current / 9) + rowStep));
+    const column = Math.min(8, Math.max(0, (current % 9) + columnStep));
     set({ selected: row * 9 + column });
   },
 
@@ -423,7 +426,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   requestHint: () => {
     const state = get();
-    if (state.status !== "playing") return;
+    if (state.status !== "playing" || state.hint) return;
     const step = nextStep(state.entries);
     if (step) {
       set({ hint: { kind: "logical", step, level: 1 }, hintsUsed: state.hintsUsed + 1 });

@@ -47,4 +47,20 @@ describe("game history", () => {
     useGameStore.getState().moveSelection(1, 0);
     expect(useGameStore.getState().selected).toBe(10);
   });
+
+  it("selects the first cell when an arrow is pressed with nothing selected", () => {
+    useGameStore.getState().select(null);
+    useGameStore.getState().moveSelection(0, 1);
+    expect(useGameStore.getState().selected).toBe(0);
+  });
+
+  it("does not count another hint while one is already open", () => {
+    useGameStore.getState().select(0);
+    useGameStore.getState().requestHint();
+    const used = useGameStore.getState().hintsUsed;
+    expect(used).toBe(1);
+    useGameStore.getState().requestHint();
+    expect(useGameStore.getState().hintsUsed).toBe(used);
+    expect(useGameStore.getState().hint).not.toBeNull();
+  });
 });

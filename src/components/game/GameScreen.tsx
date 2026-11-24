@@ -99,6 +99,7 @@ export function GameScreen() {
       });
       setMenuOpen(false);
       setVictoryOpen(true);
+      router.push("/game");
     } catch {
       setError("A puzzle didn't settle. Try once more.");
     } finally {
@@ -142,7 +143,13 @@ export function GameScreen() {
       <header className="mb-5 grid grid-cols-[1fr_auto] items-end gap-x-4 gap-y-1">
         <p className="text-sm text-muted">{mode === "daily" ? "Daily" : difficultyLabel(difficulty)}</p>
         <div className="flex justify-end gap-2">
-          <Button type="button" variant="outline" size="sm" onClick={() => (playing ? useGameStore.getState().pause() : useGameStore.getState().resume())}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={status === "complete"}
+            onClick={() => (playing ? useGameStore.getState().pause() : useGameStore.getState().resume())}
+          >
             {status === "paused" ? "Resume" : "Pause"}
           </Button>
           <Button type="button" variant="outline" size="sm" onClick={() => setMenuOpen(true)}>
@@ -173,7 +180,7 @@ export function GameScreen() {
         />
         {status === "paused" ? (
           <motion.div
-            className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[var(--board-paper)]"
+            className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[var(--board-paper)] text-[var(--board-given)]"
             initial={animate ? { opacity: 0 } : false}
             animate={{ opacity: 1 }}
           >

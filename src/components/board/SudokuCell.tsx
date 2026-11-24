@@ -48,6 +48,9 @@ export const SudokuCell = memo(function SudokuCell({
       aria-label={`${label}${conflict || wrong ? ", conflict" : ""}`}
       disabled={readOnly}
       onClick={() => onSelect(index)}
+      onFocus={() => {
+        if (!readOnly) onSelect(index);
+      }}
       className={cn(
         "sudoku-cell",
         given && "given",

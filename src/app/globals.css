@@ -147,7 +147,7 @@ a {
 .sudoku-board {
   display: grid;
   grid-template-columns: repeat(9, minmax(0, 1fr));
-  width: min(100%, var(--board-max));
+  width: min(100%, var(--board-max), calc(100svh - 16rem));
   aspect-ratio: 1;
   background: var(--board-paper);
   border: 2px solid var(--board-strong);
@@ -192,7 +192,16 @@ a {
 }
 .sudoku-cell.selected { box-shadow: inset 0 0 0 2px var(--board-selected); }
 .sudoku-cell.emphasis { box-shadow: inset 0 0 0 2px var(--board-selected); }
-.sudoku-cell:focus-visible { outline: none; }
+.sudoku-cell:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--board-selected);
+}
+
+@media (max-width: 767px) {
+  .sudoku-board {
+    width: min(100%, var(--board-max), calc(100svh - 24rem));
+  }
+}
 
 .candidate-notes {
   display: grid;

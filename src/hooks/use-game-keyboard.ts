@@ -11,6 +11,7 @@ export function useGameKeyboard() {
       if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) {
         return;
       }
+      if (document.querySelector("[role='dialog']")) return;
       const store = useGameStore.getState();
       const key = event.key;
 
